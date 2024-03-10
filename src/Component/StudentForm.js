@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
-import Dropdown from "react-bootstrap/Dropdown";
 import Navbar from "./Navbar";
 import { getAllRooms, createStudentAdmin } from "../Services/APIService";
-
 import DateP from "./DatePicker";
 
 function BasicExample() {
@@ -14,8 +12,9 @@ function BasicExample() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
-  const [dateOfJoining, setDateOfJoining] = useState(""); // State to hold the selected rent date
+  const [dateOfJoining, setDateOfJoining] = useState("");
   const [roomNumbers, setRoomNumbers] = useState([]);
+  const [aadharCardNumber, setAadharCardNumber] = useState("");
 
   useEffect(() => {
     async function fetchRoomNumbers() {
@@ -43,25 +42,25 @@ function BasicExample() {
       email: email,
       address: address,
       phoneNumber: phoneNumber,
+      aadharCardNumber: aadharCardNumber,
       room: {
-        roomNumber: parseInt(roomNumber), // Ensure roomNumber is converted to an integer
+        roomNumber: parseInt(roomNumber),
       },
-      dateOfJoining: formattedRentDate, // Include the selected rent date in the form data
+      dateOfJoining: formattedRentDate,
     };
 
     console.log("formData : ", formData);
-    debugger;
+
     try {
-      // Call createStudent function and await its execution
       const response = await createStudentAdmin(formData);
       console.log("Student created successfully:", response);
-      // Optionally, you can reset the form fields after successful submission
       setName("");
       setEmail("");
       setPhoneNumber("");
+      setAadharCardNumber("");
       setAddress("");
       setRoomNumber("");
-      setDateOfJoining(""); // Reset the rent date after submission
+      setDateOfJoining("");
     } catch (error) {
       console.error("Error creating student:", error);
     }
@@ -79,6 +78,7 @@ function BasicExample() {
               placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -96,7 +96,32 @@ function BasicExample() {
               type="tel"
               placeholder="Enter phone number"
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) => {
+                const input = e.target.value;
+                const regex = /^[0-9]*$/; // Regular expression to allow only numeric values
+                if (regex.test(input) || input === "") {
+                  setPhoneNumber(input);
+                }
+              }}
+              pattern="[0-9]*"
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicAadharCardNumber">
+            <Form.Label>Aadhar Card Number</Form.Label>
+            <Form.Control
+              type="tel"
+              placeholder="Enter aadhar card number"
+              value={aadharCardNumber}
+              onChange={(e) => {
+                const input = e.target.value;
+                const regex = /^[0-9]*$/; // Regular expression to allow only numeric values
+                if (regex.test(input) || input === "") {
+                  setAadharCardNumber(input);
+                }
+              }}
+              pattern="[0-9]*"
+              required
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicAddress">
@@ -109,28 +134,27 @@ function BasicExample() {
               onChange={(e) => setAddress(e.target.value)}
             />
           </Form.Group>
+
           <Form.Group className="mb-3" controlId="formBasicRoomNumber">
             <Form.Label>Room Number</Form.Label>
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                {roomNumber || "Select Room Number"}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {roomNumbers.map((room, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    onClick={() => setRoomNumber(room)}
-                  >
-                    {room}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
+            <Form.Control
+              as="select"
+              required
+              value={roomNumber}
+              onChange={(e) => setRoomNumber(e.target.value)}
+            >
+              <option value="">Select Room Number</option>
+              {roomNumbers.map((room, index) => (
+                <option key={index} value={room}>
+                  {room}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
+
           <Form.Group className="mb-3" controlId="formBasicDate">
             <Form.Label>Date Of Joining</Form.Label>
             <br />
-            {/* Pass setRentDate as a prop to DateP to update rentDate state */}
             <DateP
               selectedDate={dateOfJoining}
               onChange={(newValue) => setDateOfJoining(newValue)}

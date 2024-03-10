@@ -129,6 +129,20 @@ const fetchStudentsByPaymentStatus = async () => {
   }
 };
 
+const createRazorPayOrder = async (amount) => {
+  console.log("Inside createRazorPayOrder");
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/payment/createOrder",
+      { amount: amount, info: 1 }
+    );
+    console.log("response : ", response);
+    return response.data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+};
+
 export {
   loginService,
   signUpService,
@@ -139,4 +153,5 @@ export {
   fetchAllStudentService,
   fetchPaymentsByAadharCard,
   fetchStudentsByPaymentStatus,
+  createRazorPayOrder,
 };

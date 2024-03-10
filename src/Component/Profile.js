@@ -80,6 +80,10 @@ function BasicExample() {
       );
     }
 
+    const formattedDateOfJoining = dateOfJoining
+      ? new Date(dateOfJoining).toISOString().slice(0, 10)
+      : "";
+
     // Append student DTO data
     formData.append(
       "studentDTO",
@@ -92,6 +96,7 @@ function BasicExample() {
         room: {
           roomNumber: parseInt(roomNumber),
         },
+        dateOfJoining: formattedDateOfJoining,
       })
     );
 
@@ -129,128 +134,130 @@ function BasicExample() {
       <Navbar />
       <div style={{ maxWidth: "800px", marginTop: "50px", marginLeft: "7%" }}>
         <Container style={{ maxWidth: "800px", marginTop: "50px" }}>
-          <Form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="formBasicName">
-                  <Form.Label>Student Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="formBasicPhoneNumber">
-                  <Form.Label>Phone Number</Form.Label>
-                  <Form.Control
-                    type="tel"
-                    placeholder="Enter phone number"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group
-                  className="mb-3"
-                  controlId="formBasicAadharCardNumber"
-                >
-                  <Form.Label>Aadhar Card Number</Form.Label>
-                  <Form.Control
-                    type="tel"
-                    placeholder="Enter aadhar card number"
-                    value={aadharCardNumber}
-                    onChange={(e) => setAadharCardNumber(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="formBasicAddress">
-                  <Form.Label>Address</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={5.9}
-                    placeholder="Enter address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="formBasicRoomNumber">
-                  <Form.Label>Room Number</Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={roomNumber}
-                    onChange={(e) => setRoomNumber(e.target.value)}
+          {!submitted && (
+            <Form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="formBasicName">
+                    <Form.Label>Student Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="formBasicPhoneNumber">
+                    <Form.Label>Phone Number</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      placeholder="Enter phone number"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="formBasicAadharCardNumber"
                   >
-                    <option>Select Room Number</option>
-                    {roomNumbers.map((room, index) => (
-                      <option key={index} value={room}>
-                        {room}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicDate">
-                  <Form.Label>Date Of Joining</Form.Label>
+                    <Form.Label>Aadhar Card Number</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      placeholder="Enter aadhar card number"
+                      value={aadharCardNumber}
+                      onChange={(e) => setAadharCardNumber(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="formBasicAddress">
+                    <Form.Label>Address</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={5.9}
+                      placeholder="Enter address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="formBasicRoomNumber">
+                    <Form.Label>Room Number</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={roomNumber}
+                      onChange={(e) => setRoomNumber(e.target.value)}
+                    >
+                      <option>Select Room Number</option>
+                      {roomNumbers.map((room, index) => (
+                        <option key={index} value={room}>
+                          {room}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="formBasicDate">
+                    <Form.Label>Date Of Joining</Form.Label>
+                    <br />
+                    {/* Pass setRentDate as a prop to DateP to update rentDate state */}
+                    <DateP
+                      selectedDate={dateOfJoining}
+                      onChange={(newValue) => setDateOfJoining(newValue)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <Form.Group controlId="formBasicProfileImage">
+                    <Form.Label>Profile Picture</Form.Label>
+                    <Form.Control
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                  </Form.Group>
                   <br />
-                  {/* Pass setRentDate as a prop to DateP to update rentDate state */}
-                  <DateP
-                    selectedDate={dateOfJoining}
-                    onChange={(newValue) => setDateOfJoining(newValue)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="formBasicProfileImage">
-                  <Form.Label>Profile Picture</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                  />
-                </Form.Group>
-                <br />
-                <Form.Group controlId="formBasicAadharCardImage">
-                  <Form.Label>Aadhar Card Photo</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAadharImageChange}
-                  />
-                </Form.Group>
-                <br />
-                <Button
-                  variant="primary"
-                  type="submit"
-                  style={{ marginTop: "10px" }}
-                >
-                  Submit
-                </Button>
-              </Col>
-            </Row>
-          </Form>
+                  <Form.Group controlId="formBasicAadharCardImage">
+                    <Form.Label>Aadhar Card Photo</Form.Label>
+                    <Form.Control
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAadharImageChange}
+                    />
+                  </Form.Group>
+                  <br />
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    style={{ marginTop: "10px" }}
+                  >
+                    Submit
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          )}
           {submitted && (
             <div>
               <h5>Details</h5>

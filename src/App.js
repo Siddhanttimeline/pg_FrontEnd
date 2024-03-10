@@ -12,6 +12,7 @@ import Records from "./Component/Records";
 import StudentForm from "./Component/StudentForm";
 import PaymentHistoryDashboard from "./Component/PaymentHistoryDashboard";
 import Profile from "./Component/Profile";
+import Pay from "./Component/Pay";
 
 function App({ children }) {
   return (
@@ -25,6 +26,7 @@ function App({ children }) {
         <Route path="/add-student" element={<StudentForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/payment-history" element={<PaymentHistoryDashboard />} />
+        <Route path="/pay" element={<Pay />} />
       </Routes>
     </Router>
   );

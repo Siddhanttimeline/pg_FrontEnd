@@ -20,6 +20,7 @@ const pages = [
   "Records",
   "Add Student",
   "Issues",
+  "Pay",
   "Payment History",
 ];
 const settings = ["Profile", "Account", "Logout"];
@@ -41,6 +42,8 @@ function ResponsiveAppBar() {
       navigate("/dashboard");
     } else if (selectedPage === "Profile") {
       navigate("/profile");
+    } else if (selectedPage === "Pay") {
+      navigate("/pay");
     }
   }, [selectedPage, navigate]);
 
