@@ -4,7 +4,11 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { getAllRooms, createStudentUser } from "../Services/APIService";
+import {
+  getAllRooms,
+  createStudentUser,
+  updateStudentUser,
+} from "../Services/APIService";
 import Navbar from "./Navbar";
 import DateP from "./DatePicker";
 
@@ -19,8 +23,9 @@ function BasicExample() {
   const [profileImage, setProfileImage] = useState(null);
   const [aadharCardImage, setAadharCardNumberImage] = useState(null);
   const [submitted, setSubmitted] = useState(false);
-  const [editMode, setEditMode] = useState(true); // Initially set to true to show the form
+  const [editMode, setEditMode] = useState(false); // Initially set to true to show the form
   const [dateOfJoining, setDateOfJoining] = useState(""); // State to hold the selected rent date
+  const [studentId, setStudentId] = useState("");
 
   useEffect(() => {
     async function fetchRoomNumbers() {
@@ -61,6 +66,7 @@ function BasicExample() {
   };
 
   const handleSubmit = async (e) => {
+    console.log("Handle Submit btn called");
     e.preventDefault();
     const formData = new FormData();
 
@@ -103,14 +109,32 @@ function BasicExample() {
     console.log("FORM DATA CHECK:", formData);
 
     try {
-      const response = await createStudentUser(formData);
+      let response;
+      if (!editMode) {
+        console.log("Calling create ");
+        console.log("printing formData");
+        formData.forEach((value, key) => {
+          console.log(key, value);
+        });
+
+        response = await createStudentUser(formData);
+      } else {
+        console.log("Calling update ");
+        console.log("printing formData");
+        formData.forEach((value, key) => {
+          console.log(key, value);
+        });
+        console.log("formData : ", formData);
+        response = await updateStudentUser(formData, studentId);
+      }
       if (response.status === 201) {
         setSubmitted(true);
-        setEditMode(false); // After submission, switch to display mode
+        setEditMode(false); // After submission or update, switch to display mode
+        setStudentId(response.data.id);
       }
-      console.log("Student created successfully:", response);
+      console.log("Student created/updated successfully:", response);
     } catch (error) {
-      console.error("Error creating student:", error);
+      console.error("Error creating/updating student:", error);
     }
   };
 
@@ -209,11 +233,12 @@ function BasicExample() {
                       onChange={(e) => setRoomNumber(e.target.value)}
                     >
                       <option>Select Room Number</option>
-                      {roomNumbers.map((room, index) => (
-                        <option key={index} value={room}>
-                          {room}
-                        </option>
-                      ))}
+                      {roomNumbers &&
+                        roomNumbers.map((room, index) => (
+                          <option key={index} value={room}>
+                            {room}
+                          </option>
+                        ))}
                     </Form.Control>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="formBasicDate">

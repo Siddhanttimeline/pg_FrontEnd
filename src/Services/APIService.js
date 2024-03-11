@@ -90,6 +90,24 @@ const createStudentUser = async (formData) => {
   }
 };
 
+// Update Student (user)
+const updateStudentUser = async (formData, studentId) => {
+  console.log("Inside updateStudentUser");
+  console.log("form data : ", formData);
+  console.log("studentId : ", studentId);
+
+  try {
+    const response = await axios.post(
+      `http://localhost:8080/api/student/update/${studentId}`,
+      formData
+    );
+    console.log("response : ", response);
+    return response;
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+};
+
 // fetch Student
 const fetchAllStudentService = async (body) => {
   console.log("Inside fetchAllStudentService");
@@ -154,4 +172,5 @@ export {
   fetchPaymentsByAadharCard,
   fetchStudentsByPaymentStatus,
   createRazorPayOrder,
+  updateStudentUser,
 };

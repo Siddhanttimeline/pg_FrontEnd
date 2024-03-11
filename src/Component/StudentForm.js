@@ -144,11 +144,12 @@ function BasicExample() {
               onChange={(e) => setRoomNumber(e.target.value)}
             >
               <option value="">Select Room Number</option>
-              {roomNumbers.map((room, index) => (
-                <option key={index} value={room}>
-                  {room}
-                </option>
-              ))}
+              {roomNumbers &&
+                roomNumbers.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
             </Form.Control>
           </Form.Group>
 

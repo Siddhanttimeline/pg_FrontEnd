@@ -35,21 +35,22 @@ const Records = () => {
     { id: "aadharCardNumber", label: "Aadhar Card Number", minWidth: 100 },
   ];
 
-  console.log("students : ", students);
-  const filteredRows = students.filter((student) =>
-    Object.values(student).some(
-      (value) =>
-        (value !== null &&
-          typeof value === "object" &&
-          "roomNumber" in value &&
-          value.roomNumber
-            .toString()
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) ||
-        (value !== null &&
-          value.toString().toLowerCase().includes(searchTerm.toLowerCase()))
-    )
-  );
+  const filteredRows = students
+    ? students.filter((student) =>
+        Object.values(student).some(
+          (value) =>
+            (value !== null &&
+              typeof value === "object" &&
+              "roomNumber" in value &&
+              value.roomNumber
+                .toString()
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())) ||
+            (value !== null &&
+              value.toString().toLowerCase().includes(searchTerm.toLowerCase()))
+        )
+      )
+    : [];
 
   const rows = filteredRows.map((student) => {
     const { room, ...rest } = student;
