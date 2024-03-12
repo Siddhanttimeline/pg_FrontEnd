@@ -28,11 +28,11 @@ function SignInSide() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log("SIddhant");
+      console.log("Siddhant");
       const response = await loginService(email, password);
       console.log("RESPONSE IN LOGIN : ", response.status);
       if (response.status === 200) {
-        navigate("/home"); // Use navigate to redirect to "/home"
+        navigate("/dashboard"); // Use navigate to redirect to "/home"
       } else {
         console.log("Login failed");
       }

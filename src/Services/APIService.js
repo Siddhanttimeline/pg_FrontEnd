@@ -5,14 +5,11 @@ const loginService = async (email, password) => {
   console.log("API");
   console.log(email, password);
   const body = {
-    userName: email,
+    email: email,
     password: password,
   };
   try {
-    const response = await axios.post(
-      "http://localhost:5000/api/v1/auth/login",
-      body
-    );
+    const response = await axios.post("http://localhost:8080/auth/login", body);
 
     return response;
   } catch (error) {
