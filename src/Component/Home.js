@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import StickyHeadTable from "./Table";
 import OutlinedCard from "./Card";
@@ -28,12 +29,17 @@ function App() {
   const [unpaidCountByFloor, setUnpaidCountByFloor] = useState({});
   const [overallPaidCount, setOverallPaidCount] = useState(0);
   const [overallUnpaidCount, setOverallUnpaidCount] = useState(0);
+  // const jwtToken = useSelector((state) => state.auth.jwtToken);
+  const jwtToken = sessionStorage.getItem("token");
+  const session = sessionStorage.getItem("isLoggedIn");
+  console.log("session : ", session);
+
+  console.log("JWT Home : ", jwtToken);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const studentData = await fetchAllStudentService();
-        console.log("studentData : ", studentData);
+        const studentData = await fetchAllStudentService(jwtToken);
 
         let overallPaid = 0;
         let overallUnpaid = 0;
@@ -71,7 +77,7 @@ function App() {
 
     async function fetchStudentsByPayment() {
       try {
-        const studentData = await fetchStudentsByPaymentStatus();
+        const studentData = await fetchStudentsByPaymentStatus(jwtToken);
         const filteredRows = studentData.data.filter((student) =>
           Object.values(student).some(
             (value) =>
@@ -113,7 +119,7 @@ function App() {
 
     fetchData();
     fetchStudentsByPayment();
-  }, [searchTerm]);
+  }, [searchTerm, jwtToken]);
 
   return (
     <>

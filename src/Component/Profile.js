@@ -11,6 +11,9 @@ import {
 } from "../Services/APIService";
 import Navbar from "./Navbar";
 import DateP from "./DatePicker";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { dataActions } from "../store/studentDataSlice";
 
 function BasicExample() {
   const [name, setName] = useState("");
@@ -26,11 +29,16 @@ function BasicExample() {
   const [editMode, setEditMode] = useState(false); // Initially set to true to show the form
   const [dateOfJoining, setDateOfJoining] = useState(""); // State to hold the selected rent date
   const [studentId, setStudentId] = useState("");
+  const studentProfileData = useSelector((state) => state.profileData);
+  const jwtToken = sessionStorage.getItem("token");
+  const dispatch = useDispatch();
+
+  console.log("studentProfileData : ", studentProfileData);
 
   useEffect(() => {
     async function fetchRoomNumbers() {
       try {
-        const rooms = await getAllRooms();
+        const rooms = await getAllRooms(jwtToken);
         setRoomNumbers(rooms);
       } catch (error) {
         console.error("Error fetching room numbers:", error);
@@ -38,7 +46,7 @@ function BasicExample() {
     }
 
     fetchRoomNumbers();
-  }, []);
+  }, [jwtToken]);
 
   const blobToFile = (formData, blobUrl, filename) => {
     return fetch(blobUrl)
@@ -117,7 +125,7 @@ function BasicExample() {
           console.log(key, value);
         });
 
-        response = await createStudentUser(formData);
+        response = await createStudentUser(formData, jwtToken);
       } else {
         console.log("Calling update ");
         console.log("printing formData");
@@ -125,17 +133,37 @@ function BasicExample() {
           console.log(key, value);
         });
         console.log("formData : ", formData);
-        response = await updateStudentUser(formData, studentId);
+        response = await updateStudentUser(formData, studentId, jwtToken);
       }
       if (response.status === 201) {
         setSubmitted(true);
         setEditMode(false); // After submission or update, switch to display mode
         setStudentId(response.data.id);
+        handleSaveData(response.data);
       }
       console.log("Student created/updated successfully:", response);
     } catch (error) {
       console.error("Error creating/updating student:", error);
     }
+  };
+
+  const handleSaveData = (response) => {
+    dispatch(
+      dataActions.saveData({
+        id: response.id,
+        name: response.name,
+        email: response.email,
+        address: response.address,
+        phoneNumber: response.phoneNumber,
+        aadharCardNumber: response.aadharCardNumber,
+        profileImagePath: response.profileImage,
+        aadharCardImagePath: response.aadharCardImage,
+        room: response.data.room,
+        payments: response.data.payments,
+        dateOfJoining: response.dateOfJoining,
+        currentMonthPayment: response.data.currentMonthPayment,
+      })
+    );
   };
 
   const handleImageChange = (e) => {

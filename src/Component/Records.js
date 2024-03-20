@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import Table from "./Table";
 import Navbar from "./Navbar";
 import { fetchAllStudentService } from "../Services/APIService";
+import { useSelector } from "react-redux";
 
 const Records = () => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // const jwtToken = useSelector((state) => state.auth.jwtToken);
+  const jwtToken = sessionStorage.getItem("token");
+
+  console.log("JWT : ", jwtToken);
+
   useEffect(() => {
     async function fetchStudents() {
       try {
-        const studentData = await fetchAllStudentService();
+        const studentData = await fetchAllStudentService(jwtToken);
         setStudents(studentData);
       } catch (error) {
         console.error("Error fetching student data:", error);
@@ -18,7 +24,7 @@ const Records = () => {
     }
 
     fetchStudents();
-  }, []); // Empty dependency array ensures the effect runs only once
+  }, [jwtToken]); // Empty dependency array ensures the effect runs only once
 
   const columns = [
     { id: "name", label: "Name", minWidth: 100 },

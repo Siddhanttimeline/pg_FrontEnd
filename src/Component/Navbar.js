@@ -14,7 +14,8 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/index";
 const pages = [
   "Dashboard",
   "Records",
@@ -30,6 +31,7 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [selectedPage, setSelectedPage] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (selectedPage === "Records") {
@@ -44,6 +46,9 @@ function ResponsiveAppBar() {
       navigate("/profile");
     } else if (selectedPage === "Pay") {
       navigate("/pay");
+    } else if (selectedPage === "Logout") {
+      navigate("/login");
+      setAnchorElUser(null);
     }
   }, [selectedPage, navigate]);
 
@@ -59,6 +64,7 @@ function ResponsiveAppBar() {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
+    console.log("ICON CLICKED!!");
     setAnchorElUser(event.currentTarget);
   };
 
@@ -72,8 +78,16 @@ function ResponsiveAppBar() {
   };
 
   const handleCloseUserMenu = (page) => {
-    setSelectedPage(page);
-    setAnchorElUser(null);
+    console.log("CLICKED", page);
+    if (page === "Logout") {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("isLoggedIn");
+      dispatch(authActions.logout());
+      setSelectedPage(page);
+    } else {
+      setSelectedPage(page);
+      setAnchorElUser(null);
+    }
   };
 
   return (

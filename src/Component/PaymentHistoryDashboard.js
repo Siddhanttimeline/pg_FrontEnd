@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { fetchPaymentsByAadharCard } from "../Services/APIService";
 import Table from "./Table";
 
@@ -6,6 +7,7 @@ import Navbar from "./Navbar";
 
 const Payment = () => {
   const [payments, setPayments] = useState([]);
+  const jwtToken = useSelector((state) => state.auth.jwtToken);
 
   const columns = [
     { id: "paymentDate", label: "Payment Date", minWidth: 100 },
@@ -22,7 +24,7 @@ const Payment = () => {
       console.log("Inside fetchData");
 
       try {
-        const response = await fetchPaymentsByAadharCard(); // Fetch payment data for the logged-in student
+        const response = await fetchPaymentsByAadharCard(jwtToken); // Fetch payment data for the logged-in student
         if (response.status !== 200 && response.status !== 201) {
           throw new Error("Failed to fetch payment data");
         }

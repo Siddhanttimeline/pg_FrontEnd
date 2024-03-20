@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import Navbar from "./Navbar";
 import { getAllRooms, createStudentAdmin } from "../Services/APIService";
 import DateP from "./DatePicker";
+import { useSelector } from "react-redux";
 
 function BasicExample() {
   const [name, setName] = useState("");
@@ -15,11 +16,13 @@ function BasicExample() {
   const [dateOfJoining, setDateOfJoining] = useState("");
   const [roomNumbers, setRoomNumbers] = useState([]);
   const [aadharCardNumber, setAadharCardNumber] = useState("");
+  // const jwtToken = useSelector((state) => state.auth.jwtToken);
+  const jwtToken = sessionStorage.getItem("token");
 
   useEffect(() => {
     async function fetchRoomNumbers() {
       try {
-        const rooms = await getAllRooms();
+        const rooms = await getAllRooms(jwtToken);
         setRoomNumbers(rooms);
       } catch (error) {
         console.error("Error fetching room numbers:", error);
@@ -27,7 +30,7 @@ function BasicExample() {
     }
 
     fetchRoomNumbers();
-  }, []);
+  }, [jwtToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +55,7 @@ function BasicExample() {
     console.log("formData : ", formData);
 
     try {
-      const response = await createStudentAdmin(formData);
+      const response = await createStudentAdmin(formData, jwtToken);
       console.log("Student created successfully:", response);
       setName("");
       setEmail("");

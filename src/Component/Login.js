@@ -17,13 +17,18 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import backgroundImg from "../background.jpg";
-import { loginService, loginInWithGitHubService } from "../Services/APIService"; // Import your login function from the API service file
+import { loginService, loginInWithGitHubService } from "../Services/APIService";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../store/index";
 
 function SignInSide() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,6 +37,10 @@ function SignInSide() {
       const response = await loginService(email, password);
       console.log("RESPONSE IN LOGIN : ", response.status);
       if (response.status === 200) {
+        const jwtToken = response.data.jwtToken;
+        sessionStorage.setItem("token", jwtToken);
+        sessionStorage.setItem("isLoggedIn", "true");
+        dispatch(authActions.login(jwtToken));
         navigate("/dashboard"); // Use navigate to redirect to "/home"
       } else {
         console.log("Login failed");
