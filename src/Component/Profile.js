@@ -14,6 +14,7 @@ import DateP from "./DatePicker";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { dataActions } from "../store/studentDataSlice";
+import { useNavigate } from "react-router-dom";
 
 function BasicExample() {
   const [name, setName] = useState("");
@@ -32,10 +33,14 @@ function BasicExample() {
   const studentProfileData = useSelector((state) => state.profileData);
   const jwtToken = sessionStorage.getItem("token");
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   console.log("studentProfileData : ", studentProfileData);
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
+      navigate("/login");
+    }
+
     async function fetchRoomNumbers() {
       try {
         const rooms = await getAllRooms(jwtToken);

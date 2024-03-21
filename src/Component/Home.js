@@ -6,6 +6,7 @@ import OutlinedCard from "./Card";
 import Navbar from "./Navbar";
 import { fetchStudentsByPaymentStatus } from "../Services/APIService";
 import { fetchAllStudentService } from "../Services/APIService";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 100 },
@@ -29,14 +30,15 @@ function App() {
   const [unpaidCountByFloor, setUnpaidCountByFloor] = useState({});
   const [overallPaidCount, setOverallPaidCount] = useState(0);
   const [overallUnpaidCount, setOverallUnpaidCount] = useState(0);
-  // const jwtToken = useSelector((state) => state.auth.jwtToken);
   const jwtToken = sessionStorage.getItem("token");
-  const session = sessionStorage.getItem("isLoggedIn");
-  console.log("session : ", session);
 
-  console.log("JWT Home : ", jwtToken);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
+      navigate("/login");
+    }
+
     async function fetchData() {
       try {
         const studentData = await fetchAllStudentService(jwtToken);

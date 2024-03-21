@@ -3,17 +3,21 @@ import Table from "./Table";
 import Navbar from "./Navbar";
 import { fetchAllStudentService } from "../Services/APIService";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Records = () => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const navigate = useNavigate();
   // const jwtToken = useSelector((state) => state.auth.jwtToken);
   const jwtToken = sessionStorage.getItem("token");
 
   console.log("JWT : ", jwtToken);
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
+      navigate("/login");
+    }
     async function fetchStudents() {
       try {
         const studentData = await fetchAllStudentService(jwtToken);

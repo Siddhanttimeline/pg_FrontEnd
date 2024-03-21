@@ -39,8 +39,6 @@ function SignInSide() {
       if (response.status === 200) {
         const jwtToken = response.data.jwtToken;
         sessionStorage.setItem("token", jwtToken);
-        sessionStorage.setItem("isLoggedIn", "true");
-        dispatch(authActions.login(jwtToken));
         navigate("/dashboard"); // Use navigate to redirect to "/home"
       } else {
         console.log("Login failed");

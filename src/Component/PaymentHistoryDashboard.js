@@ -4,11 +4,12 @@ import { fetchPaymentsByAadharCard } from "../Services/APIService";
 import Table from "./Table";
 
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 const Payment = () => {
   const [payments, setPayments] = useState([]);
   const jwtToken = useSelector((state) => state.auth.jwtToken);
-
+  const navigate = useNavigate();
   const columns = [
     { id: "paymentDate", label: "Payment Date", minWidth: 100 },
     { id: "amount", label: "Amount", minWidth: 100 },
@@ -20,6 +21,9 @@ const Payment = () => {
   const rows = payments;
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
+      navigate("/login");
+    }
     const fetchData = async () => {
       console.log("Inside fetchData");
 

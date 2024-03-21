@@ -14,8 +14,6 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { useDispatch } from "react-redux";
-import { authActions } from "../store/index";
 const pages = [
   "Dashboard",
   "Records",
@@ -31,7 +29,6 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [selectedPage, setSelectedPage] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (selectedPage === "Records") {
@@ -82,7 +79,6 @@ function ResponsiveAppBar() {
     if (page === "Logout") {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("isLoggedIn");
-      dispatch(authActions.logout());
       setSelectedPage(page);
     } else {
       setSelectedPage(page);

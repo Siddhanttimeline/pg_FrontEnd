@@ -13,68 +13,21 @@ import StudentForm from "./Component/StudentForm";
 import PaymentHistoryDashboard from "./Component/PaymentHistoryDashboard";
 import Profile from "./Component/Profile";
 import Pay from "./Component/Pay";
-import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "./store/index";
 
 function App({ children }) {
   console.log("::::::::::::::::::::::::  APP :::::::::::::::::::::::::::::");
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
-  console.log(isLoggedIn);
-
-  useEffect(() => {
-    const checkSession = () => {
-      const isLoggedInValue = sessionStorage.getItem("isLoggedIn") === "true";
-      if (!isLoggedInValue) {
-        dispatch(authActions.logout());
-      }
-    };
-
-    const interval = setInterval(checkSession, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            isLoggedIn ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/signup"
-          element={isLoggedIn ? <SignUp /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/records"
-          element={isLoggedIn ? <Records /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/add-student"
-          element={isLoggedIn ? <StudentForm /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/profile"
-          element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/payment-history"
-          element={
-            isLoggedIn ? <PaymentHistoryDashboard /> : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/pay"
-          element={isLoggedIn ? <Pay /> : <Navigate to="/login" />}
-        />
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/dashboard" element={<Home />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/records" element={<Records />} />
+        <Route path="/add-student" element={<StudentForm />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/payment-history" element={<PaymentHistoryDashboard />} />
+        <Route path="/pay" element={<Pay />} />
       </Routes>
     </Router>
   );

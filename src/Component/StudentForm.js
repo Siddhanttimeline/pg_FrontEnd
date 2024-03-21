@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import { getAllRooms, createStudentAdmin } from "../Services/APIService";
 import DateP from "./DatePicker";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function BasicExample() {
   const [name, setName] = useState("");
@@ -18,8 +19,13 @@ function BasicExample() {
   const [aadharCardNumber, setAadharCardNumber] = useState("");
   // const jwtToken = useSelector((state) => state.auth.jwtToken);
   const jwtToken = sessionStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
+      navigate("/login");
+    }
+
     async function fetchRoomNumbers() {
       try {
         const rooms = await getAllRooms(jwtToken);

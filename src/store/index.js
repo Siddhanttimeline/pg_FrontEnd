@@ -1,7 +1,7 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 import dataSlice from "./studentDataSlice";
 const initialAuthState = {
-  isAuthenticated: false,
+  isAuthenticated: true,
   jwtToken: "",
 };
 
