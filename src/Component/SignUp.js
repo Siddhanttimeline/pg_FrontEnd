@@ -20,21 +20,84 @@ function SignUp() {
   const navigate = useNavigate();
   const [registered, setRegistered] = React.useState(false);
 
+  const [formValues, setFormValues] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    aadhar: "",
+    password: "",
+    termsAccepted: false,
+  });
+  const [formErrors, setFormErrors] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    aadhar: "",
+    password: "",
+  });
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { ...formErrors };
+
+    if (formValues.firstName.trim() === "") {
+      newErrors.firstName = "First Name is required";
+      valid = false;
+    } else {
+      newErrors.firstName = "";
+    }
+
+    if (formValues.lastName.trim() === "") {
+      newErrors.lastName = "Last Name is required";
+      valid = false;
+    } else {
+      newErrors.lastName = "";
+    }
+
+    if (formValues.email.trim() === "") {
+      newErrors.email = "Email is required";
+      valid = false;
+    } else {
+      newErrors.email = "";
+    }
+
+    if (formValues.aadhar.trim() === "") {
+      newErrors.aadhar = "Aadhar Card Number is required";
+      valid = false;
+    } else {
+      newErrors.aadhar = "";
+    }
+
+    if (formValues.password.trim() === "") {
+      newErrors.password = "Password is required";
+      valid = false;
+    } else {
+      newErrors.password = "";
+    }
+
+    setFormErrors(newErrors);
+    return valid;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    if (!validateForm()) {
+      return;
+    }
+
     const body = {
-      name: data.get("firstName") + " " + data.get("lastName"),
-      email: data.get("email"),
-      password: data.get("password"),
-      about: "test",
+      name: formValues.firstName + " " + formValues.lastName,
+      email: formValues.email,
+      password: formValues.password,
+      aadharCardNumber: formValues.aadhar,
     };
+
     try {
       const response = await signUpService(body);
       if (response.status === 201) {
-        setRegistered(true); // Set registered state to true
+        setRegistered(true);
         setTimeout(() => {
-          navigate("/login"); // Navigate to "/home" after 3 seconds
+          navigate("/login");
         }, 2000);
       } else {
         console.log("SignUP failed");
@@ -42,7 +105,15 @@ function SignUp() {
     } catch (error) {
       console.error("Error:", error);
     }
-    ///
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    const val = type === "checkbox" ? checked : value;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: val,
+    }));
   };
 
   function Copyright(props) {
@@ -67,7 +138,7 @@ function SignUp() {
   const defaultTheme = createTheme();
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={createTheme()}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -84,7 +155,7 @@ function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {!registered ? ( // Conditionally render the sign-up form if not registered
+          {!registered ? (
             <Box
               component="form"
               noValidate
@@ -101,6 +172,10 @@ function SignUp() {
                     id="firstName"
                     label="First Name"
                     autoFocus
+                    value={formValues.firstName}
+                    onChange={handleInputChange}
+                    error={!!formErrors.firstName}
+                    helperText={formErrors.firstName}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -111,6 +186,10 @@ function SignUp() {
                     label="Last Name"
                     name="lastName"
                     autoComplete="family-name"
+                    value={formValues.lastName}
+                    onChange={handleInputChange}
+                    error={!!formErrors.lastName}
+                    helperText={formErrors.lastName}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -121,6 +200,24 @@ function SignUp() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    value={formValues.email}
+                    onChange={handleInputChange}
+                    error={!!formErrors.email}
+                    helperText={formErrors.email}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="aadhar"
+                    label="Aadhar Card Number"
+                    name="aadhar"
+                    autoComplete="aadhar"
+                    value={formValues.aadhar}
+                    onChange={handleInputChange}
+                    error={!!formErrors.aadhar}
+                    helperText={formErrors.aadhar}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -132,12 +229,21 @@ function SignUp() {
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    value={formValues.password}
+                    onChange={handleInputChange}
+                    error={!!formErrors.password}
+                    helperText={formErrors.password}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
                     control={
-                      <Checkbox value="allowExtraEmails" color="primary" />
+                      <Checkbox
+                        name="termsAccepted"
+                        color="primary"
+                        checked={formValues.termsAccepted}
+                        onChange={handleInputChange}
+                      />
                     }
                     label="I want to receive inspiration, marketing promotions and updates via email."
                   />
@@ -160,8 +266,6 @@ function SignUp() {
               </Grid>
             </Box>
           ) : (
-            // Render a message box if registered
-
             <Box
               sx={{
                 mt: 10,
